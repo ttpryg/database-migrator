@@ -1,0 +1,57 @@
+{
+    "name": "ttpryg/database-migrator",
+    "description": "Framework-agnostic PDO schema migration runner with tracking and rollback for PHP 8.1+.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "database",
+        "migration",
+        "migrator",
+        "pdo",
+        "schema"
+    ],
+    "authors": [
+        {
+            "name": "Toto",
+            "email": "totoprayogo1916@gmail.com",
+            "homepage": "https://ttpryg.my.id"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "ext-pdo": "*"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.20",
+        "phpstan/phpstan": "^2.3",
+        "phpunit/phpunit": "^10.0",
+        "rector/rector": "^2.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ttpryg\\DatabaseMigrator\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ttpryg\\DatabaseMigrator\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "analyse": "phpstan analyse",
+        "fix:check": [
+            "vendor/bin/rector process --dry-run",
+            "vendor/bin/pint --test"
+        ],
+        "fix": [
+            "vendor/bin/rector process",
+            "vendor/bin/pint"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

@@ -1,0 +1,5 @@
+/.agents
+/vendor/
+/.phpunit.cache/
+.env
+*.log
