@@ -151,6 +151,38 @@ final class MigrationRunnerTest extends TestCase
         $this->assertTrue($this->tableExists('audit_engine_migrations'));
     }
 
+    public function test_auto_create_tracker_table_can_be_disabled(): void
+    {
+        $runner = new MigrationRunner(
+            $this->pdo,
+            $this->directory,
+            'custom_migrations',
+            false
+        );
+
+        $this->assertFalse($this->tableExists('custom_migrations'));
+
+        $this->expectException(\PDOException::class);
+        $runner->appliedMigrations();
+    }
+
+    public function test_ensure_tracker_table_can_be_called_explicitly(): void
+    {
+        $runner = new MigrationRunner(
+            $this->pdo,
+            $this->directory,
+            'custom_migrations',
+            false
+        );
+
+        $this->assertFalse($this->tableExists('custom_migrations'));
+
+        $runner->ensureTrackerTable();
+
+        $this->assertTrue($this->tableExists('custom_migrations'));
+        $this->assertSame([], $runner->appliedMigrations());
+    }
+
     public function test_invalid_tracker_table_name_is_rejected(): void
     {
         $this->expectException(InvalidMigrationException::class);

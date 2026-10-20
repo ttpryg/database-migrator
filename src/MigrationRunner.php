@@ -32,7 +32,8 @@ class MigrationRunner
     public function __construct(
         private readonly PDO $pdo,
         private readonly string $migrationsPath,
-        private readonly string $trackerTable = 'migrations'
+        private readonly string $trackerTable = 'migrations',
+        private readonly bool $autoCreateTrackerTable = true
     ) {
         if (preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $trackerTable) !== 1) {
             throw InvalidMigrationException::invalidTrackerTable($trackerTable);
@@ -136,7 +137,9 @@ class MigrationRunner
      */
     public function appliedMigrations(): array
     {
-        $this->ensureTrackerTable();
+        if ($this->autoCreateTrackerTable) {
+            $this->ensureTrackerTable();
+        }
 
         $stmt = $this->pdo->prepare('SELECT migration FROM '.$this->trackerTable.' ORDER BY migration');
         $stmt->execute();
@@ -149,7 +152,10 @@ class MigrationRunner
         return $migrations;
     }
 
-    private function ensureTrackerTable(): void
+    /**
+     * Create the tracker table if it does not already exist.
+     */
+    public function ensureTrackerTable(): void
     {
         $this->pdo->exec(
             'CREATE TABLE IF NOT EXISTS '.$this->trackerTable.' (

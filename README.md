@@ -114,7 +114,7 @@ public function previouslyRecordedAs(): array
 
 ## 🗄️ Tracker Table
 
-The runner creates the tracker table automatically:
+The runner creates the tracker table automatically by default:
 
 ```sql
 CREATE TABLE IF NOT EXISTS <tracker_table> (
@@ -125,6 +125,27 @@ CREATE TABLE IF NOT EXISTS <tracker_table> (
 
 Choose a module-specific tracker name (for example
 `audit_engine_migrations`) when several modules share a database.
+
+### Disabling Automatic Tracker Table Creation
+
+In environments with restricted permissions where `CREATE TABLE` is not
+permitted for the application database user, pass `autoCreateTrackerTable: false`:
+
+```php
+$runner = new MigrationRunner(
+    $pdo,
+    __DIR__.'/database/migrations',
+    'audit_engine_migrations',
+    autoCreateTrackerTable: false
+);
+```
+
+You can explicitly create the tracker table during installation or deployment
+via:
+
+```php
+$runner->ensureTrackerTable();
+```
 
 > **MySQL/MariaDB note:** DDL statements are auto-commit. A failure in the
 > middle of a migration file cannot be rolled back automatically, so write
