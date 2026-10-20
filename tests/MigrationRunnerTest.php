@@ -153,7 +153,7 @@ final class MigrationRunnerTest extends TestCase
 
     public function test_auto_create_tracker_table_can_be_disabled(): void
     {
-        $runner = new MigrationRunner(
+        $migrationRunner = new MigrationRunner(
             $this->pdo,
             $this->directory,
             'custom_migrations',
@@ -163,12 +163,12 @@ final class MigrationRunnerTest extends TestCase
         $this->assertFalse($this->tableExists('custom_migrations'));
 
         $this->expectException(\PDOException::class);
-        $runner->appliedMigrations();
+        $migrationRunner->appliedMigrations();
     }
 
     public function test_ensure_tracker_table_can_be_called_explicitly(): void
     {
-        $runner = new MigrationRunner(
+        $migrationRunner = new MigrationRunner(
             $this->pdo,
             $this->directory,
             'custom_migrations',
@@ -177,10 +177,10 @@ final class MigrationRunnerTest extends TestCase
 
         $this->assertFalse($this->tableExists('custom_migrations'));
 
-        $runner->ensureTrackerTable();
+        $migrationRunner->ensureTrackerTable();
 
         $this->assertTrue($this->tableExists('custom_migrations'));
-        $this->assertSame([], $runner->appliedMigrations());
+        $this->assertSame([], $migrationRunner->appliedMigrations());
     }
 
     public function test_invalid_tracker_table_name_is_rejected(): void
